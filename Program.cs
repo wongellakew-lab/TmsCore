@@ -2,11 +2,13 @@
 //RunExercise1();
 
 // Execute Exercise 2
-RunExercise2();
+//RunExercise2();
 
 
 // Execute Exercise 3
-RunExercise3Part1();
+//RunExercise3Part1();
+RunExercise3Part2();
+RunExercise3Part3();
 
 void RunExercise1()
 {
@@ -79,4 +81,38 @@ void RunExercise3Part1()
     var duplicate = new EnrollmentRecord("STU-001", "CS-401", enrollment.EnrolledAt);
     Console.WriteLine($"Same data? {enrollment == duplicate}"); // True
 
+}
+
+void RunExercise3Part2()
+{
+
+    Console.WriteLine("\n--- Exercise 3 Part 2: Course Validation (field keyword) ---");
+
+    var course = new Course { Code = "CS-401", Title = "Advanced C#", Capacity = 30 };
+    Console.WriteLine($"Course: {course.Title} (Capacity: {course.Capacity})");
+    
+    // Invalid capacity — should throw
+    try
+    {
+        course.Capacity = -5;
+    }
+    catch (ArgumentOutOfRangeException ex)
+    {
+        Console.WriteLine($"Caught: {ex.Message}");
+    }
+
+    // Invalid title — should throw
+    try
+    {
+        course.Title = "";
+    }
+    catch (ArgumentException ex)
+    {
+        Console.WriteLine($"Caught: {ex.Message}");
+    }
+}
+
+void RunExercise3Part3()
+{
+    
 }
