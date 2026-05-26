@@ -7,7 +7,7 @@
 
 // Execute Exercise 3
 //RunExercise3Part1();
-RunExercise3Part2();
+//RunExercise3Part2();
 RunExercise3Part3();
 
 void RunExercise1()
@@ -114,5 +114,21 @@ void RunExercise3Part2()
 
 void RunExercise3Part3()
 {
+     Console.WriteLine("\n--- Exercise 3 Part 3: Student Model Validation ---");
+
+    var s = new Student { Id = "S1", Name = "Abeba", Age = 20, GPA = 3.8m };
+    Console.WriteLine($"Student: {s.Name}, GPA: {s.GPA}");
     
+    // Test Invalid Age
+    try { s.Age = 12; }
+    catch (Exception ex) { Console.WriteLine($"Age Error: {ex.Message}"); }
+
+    // Test Invalid GPA
+    try { s.GPA = 5.0m; }
+    catch (Exception ex) { Console.WriteLine($"GPA Error: {ex.Message}"); }
+
+     // Test Invalid Name
+    try { s.Name = ""; }
+    catch (Exception ex) { Console.WriteLine($"Name Error: {ex.Message}"); }
+
 }
