@@ -224,4 +224,29 @@ void RunExercise5()
     {
         Console.WriteLine($"- {name}");
     }
+
+    // Step 3: Class Average
+    // TODO 5: Calculate average GPA across all students
+    decimal averageGpa = students.Average(s => s.GPA);
+    Console.WriteLine($"\nClass Average GPA: {averageGpa:F2}");
+
+    // Step 4: Group by Academic Standing
+    // TODO 6: Use .GroupBy with a switch expression to classify students
+    var standingGroups = students.GroupBy(s => s.GPA switch
+    {
+        >= 3.5m => "Honors",
+        >= 2.5m => "Good Standing",
+        >= 2.0m => "Probation",
+        _ => "Academic Warning"
+    });
+
+    Console.WriteLine("\n--- Academic Standing Report ---");
+    foreach (var group in standingGroups)
+    {
+        Console.WriteLine($"\n{group.Key} ({group.Count()}):");
+        foreach (var s in group)
+        {
+            Console.WriteLine($" {s.Name} GPA: {s.GPA}");
+        }
+    }
 }
