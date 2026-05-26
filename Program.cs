@@ -11,8 +11,11 @@
 //RunExercise3Part3();
 //RunExercise3B();
 
-// Execute Session Exercise 4
-RunExercise4();
+// Execute Session 2 Exercise 4
+//RunExercise4();
+
+// Execute Session 2 Exercise 5
+RunExercise5();
 
 void RunExercise1()
 {
@@ -191,5 +194,34 @@ void RunExercise4()
     catch (InvalidOperationException ex)
     {
         Console.WriteLine($"Business rule: {ex.Message}");
+    }
+}
+
+void RunExercise5()
+{
+    Console.WriteLine("\n--- Exercise 5: Analytics Dashboard (LINQ) ---");
+
+    // Step 1: Create the Student Data using C# 12+ Collection Expressions
+    List<Student> students = [
+        new Student { Id = "S1", Name = "Abeba", Age = 22, GPA = 3.8m },
+        new Student { Id = "S2", Name = "Kidane", Age = 21, GPA = 2.4m },
+        new Student { Id = "S3", Name = "Dawit", Age = 20, GPA = 3.1m },
+        new Student { Id = "S4", Name = "Sara", Age = 23, GPA = 3.9m },
+        new Student { Id = "S5", Name = "Frehiwot", Age = 19, GPA = 2.0m },
+        new Student { Id = "S6", Name = "Yonas", Age = 24, GPA = 3.5m },
+        new Student { Id = "S7", Name = "Meron", Age = 22, GPA = 1.8m },
+        new Student { Id = "S8", Name = "Tesfaye", Age = 21, GPA = 2.9m }
+    ];
+
+    var leaderboard = students
+        .Where(s => s.GPA >= 3.5m)            // TODO 1: Extract students where GPA is >= 3.5m
+        .OrderByDescending(s => s.GPA)        // TODO 2: Sort by GPA descending
+        .Select(s => s.Name)                  // TODO 3: Project to keep only the 'Name' string
+        .ToList();                            // TODO 4: Materialize into a concrete List
+
+    Console.WriteLine($"Found {leaderboard.Count} Honors Students:");
+    foreach (var name in leaderboard)
+    {
+        Console.WriteLine($"- {name}");
     }
 }
