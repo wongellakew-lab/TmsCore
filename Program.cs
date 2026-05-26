@@ -249,4 +249,12 @@ void RunExercise5()
             Console.WriteLine($" {s.Name} GPA: {s.GPA}");
         }
     }
+
+     string[] backendCourses = ["C#", "ASP.NET Core"];
+    string[] frontendCourses = ["TypeScript", "Angular"];
+    
+    // TODO 7: Use the spread operator (..) to merge arrays and append a value
+    string[] allCourses = [.. backendCourses, .. frontendCourses, "Capstone"];
+    
+    Console.WriteLine($"\nFull curriculum: {string.Join(", ", allCourses)}");
 }
