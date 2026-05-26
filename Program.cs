@@ -9,7 +9,10 @@
 //RunExercise3Part1();
 //RunExercise3Part2();
 //RunExercise3Part3();
-RunExercise3B();
+//RunExercise3B();
+
+// Execute Session Exercise 4
+RunExercise4();
 
 void RunExercise1()
 {
@@ -154,4 +157,39 @@ void RunExercise3B()
     ];
     
     PrintGradeReport(cohortAssessments);
+}
+
+void RunExercise4()
+{
+    Console.WriteLine("\n--- Exercise 4: Guards and Pattern Matching ---");
+    var service = new EnrollmentService();
+
+    // Test 1: Valid registration
+    var validStudent = new Student { Id = "S1", Name = "Abeba", Age = 20, GPA = 3.8m };
+    var validCourse = new Course { Code = "CS-401", Title = "Advanced C#", Capacity = 30 };
+    
+    var result = service.ProcessRegistration(validStudent, validCourse);
+    Console.WriteLine($"Enrolled: {result.StudentId} in {result.CourseCode}");
+
+    // Test 2: Null student should throw ArgumentNullException
+    try
+    {
+        service.ProcessRegistration(null, validCourse);
+    }
+    catch (ArgumentNullException ex)
+    {
+        Console.WriteLine($"Guard caught: {ex.ParamName}");
+    }
+
+    // Test 3: Full course should throw InvalidOperationException
+    var fullCourse = new Course { Code = "CS-402", Title = "Full Course", Capacity = 1 };
+    fullCourse.EnrolledCount = 1;
+    try
+    {
+        service.ProcessRegistration(validStudent, fullCourse);
+    }
+    catch (InvalidOperationException ex)
+    {
+        Console.WriteLine($"Business rule: {ex.Message}");
+    }
 }
