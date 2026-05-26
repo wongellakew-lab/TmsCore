@@ -4,6 +4,10 @@
 // Execute Exercise 2
 RunExercise2();
 
+
+// Execute Exercise 3
+RunExercise3Part1();
+
 void RunExercise1()
 {
     Console.WriteLine("--- Exercise 1: Null Safety ---");
@@ -40,6 +44,7 @@ void RunExercise1()
     Console.WriteLine($"Enrolled: {enrolledAt:yyyy-MM-dd}");
     Console.WriteLine($"Campus: {campusRegion ?? "Not assigned"}");
 }
+
 void RunExercise2()
 {
     Console.WriteLine("\n--- Exercise 2: Floating Point Bug ---");
@@ -57,4 +62,21 @@ void RunExercise2()
     Console.WriteLine($"Total allocated (decimal): {totalAllocationFixed}");
     Console.WriteLine($"Total allocated (formatted): {totalAllocationFixed:F2}");
     
+}
+
+void RunExercise3Part1()
+{
+    Console.WriteLine("\n--- Exercise 3 Part 1: Immutability with Records ---");
+
+    // Testing the record
+    var enrollment = new EnrollmentRecord("STU-001", "CS-401", DateTime.UtcNow);
+    Console.WriteLine($"Original: {enrollment}");
+
+    var corrected = enrollment with { CourseCode = "CS-402" };
+    Console.WriteLine($"Corrected: {corrected}");
+
+    // Value equality check
+    var duplicate = new EnrollmentRecord("STU-001", "CS-401", enrollment.EnrolledAt);
+    Console.WriteLine($"Same data? {enrollment == duplicate}"); // True
+
 }
