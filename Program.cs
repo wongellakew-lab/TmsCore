@@ -1,4 +1,5 @@
-﻿// Execute Exercise 1
+﻿using System.Diagnostics;
+// Execute Exercise 1
 //RunExercise1();
 
 // Execute Exercise 2
@@ -15,7 +16,10 @@
 //RunExercise4();
 
 // Execute Session 2 Exercise 5
-RunExercise5();
+//RunExercise5();
+
+// Execute Session 3 Exercise 6
+await RunExercise6Step1();
 
 void RunExercise1()
 {
@@ -257,4 +261,33 @@ void RunExercise5()
     string[] allCourses = [.. backendCourses, .. frontendCourses, "Capstone"];
     
     Console.WriteLine($"\nFull curriculum: {string.Join(", ", allCourses)}");
+}
+
+async Task RunExercise6Step1()
+{
+    Console.WriteLine("--- Exercise 6: Async Performance Comparison ---");
+    
+    
+    var sw = Stopwatch.StartNew();
+    for (int i = 0; i < 5; i++)
+    {
+        Thread.Sleep(300); // Thread is HELD for 300ms - cannot serve anyone else
+    }
+    Console.WriteLine($"Blocking sequential: {sw.ElapsedMilliseconds}ms");
+
+    // 2. ASYNC BUT STILL SEQUENTIAL: Thread released, but calls are one-at-a-time
+    
+    sw.Restart();
+    for (int i = 0; i < 5; i++)
+    {
+        await Task.Delay(300); // Thread released while waiting, but still sequential
+    }
+    Console.WriteLine($"Async sequential:    {sw.ElapsedMilliseconds}ms");
+
+    // 3. THE RIGHT WAY: Async parallel - all 5 start simultaneously
+    // Maximum performance - total time equals the slowest single call
+    sw.Restart();
+    var tasks = Enumerable.Range(0, 5).Select(_ => Task.Delay(300));
+    await Task.WhenAll(tasks);
+    Console.WriteLine($"Async parallel:      {sw.ElapsedMilliseconds}ms");
 }
