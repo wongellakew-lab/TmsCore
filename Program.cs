@@ -50,5 +50,11 @@ void RunExercise2()
 
     // The output will show a tiny drift (e.g., .0000000003)
     Console.WriteLine($"Total allocated (double): {totalAllocation}");
+
+    decimal grantPerStudentFixed = 1999.99m; 
+    decimal totalAllocationFixed = grantPerStudentFixed * 100_000m;
+
+    Console.WriteLine($"Total allocated (decimal): {totalAllocationFixed}");
+    Console.WriteLine($"Total allocated (formatted): {totalAllocationFixed:F2}");
     
 }
