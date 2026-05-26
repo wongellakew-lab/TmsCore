@@ -19,7 +19,10 @@
 //RunExercise5();
 
 // Execute Session 3 Exercise 6
-await RunExercise6Step1();
+//await RunExercise6Step1();
+
+// Execute Session3 Exercise 6 Step 3
+await RunExercise6Step3();
 
 void RunExercise1()
 {
@@ -330,4 +333,30 @@ async Task<Course> FetchCourseAsync(string code)
             _ => 25
         }
     };
+}
+
+async Task RunExercise6Step3()
+{
+    Console.WriteLine("\n--- Exercise 6 Step 3: Parallel Loading ---");
+    var sw = Stopwatch.StartNew();
+
+    // Start all fetches simultaneously students AND courses
+    string[] studentIds = ["S1", "S2", "S3", "S4", "S5"];
+    string[] courseCodes = ["CRS-101", "CRS-201", "CRS-301"];
+
+    // Use LINQ to start all tasks without awaiting them yet
+    var studentTasks = studentIds.Select(id => FetchStudentAsync(id)).ToList();
+    var courseTasks = courseCodes.Select(code => FetchCourseAsync(code)).ToList();
+
+    // Both arrays load concurrently - total time is the slowest single task (~300ms)
+    Student[] students = await Task.WhenAll(studentTasks);
+    Course[] courses = await Task.WhenAll(courseTasks);
+
+    sw.Stop();
+    Console.WriteLine($"\nLoaded {students.Length} students and {courses.Length} courses in {sw.ElapsedMilliseconds}ms");
+
+    foreach (var s in students)
+    {
+        Console.WriteLine($"  {s.Name} GPA: {s.GPA}");
+    }
 }
