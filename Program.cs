@@ -295,58 +295,20 @@ async Task RunExercise6Step1()
     Console.WriteLine($"Async parallel:      {sw.ElapsedMilliseconds}ms");
 }
 
-async Task<Student> FetchStudentAsync(string id)
-{
-    Console.WriteLine($"  Fetching {id}...");
-    await Task.Delay(300); // Simulate database latency
-    return new Student
-    {
-        Id = id,
-        Name = $"Student-{id}",
-        Age = 20,
-        GPA = id switch
-        {
-            "S1" => 3.8m,
-            "S2" => 2.4m,
-            "S3" => 3.5m,
-            "S4" => 1.9m,
-            "S5" => 3.2m,
-            _ => 2.5m
-        }
-    };
-}
-
-// Step 2: Build the Course Fetcher
-async Task<Course> FetchCourseAsync(string code)
-{
-    Console.WriteLine($"  Fetching course {code}...");
-    await Task.Delay(200); // Simulate database latency
-    return new Course
-    {
-        Code = code,
-        Title = $"Course-{code}",
-        Capacity = code switch
-        {
-            "CRS-101" => 2,
-            "CRS-201" => 30,
-            "CRS-301" => 15,
-            _ => 25
-        }
-    };
-}
 
 async Task RunExercise6Step3()
 {
     Console.WriteLine("\n--- Exercise 6 Step 3: Parallel Loading ---");
     var sw = Stopwatch.StartNew();
+    var service = new EnrollmentService();
 
     // Start all fetches simultaneously students AND courses
     string[] studentIds = ["S1", "S2", "S3", "S4", "S5"];
     string[] courseCodes = ["CRS-101", "CRS-201", "CRS-301"];
 
     // Use LINQ to start all tasks without awaiting them yet
-    var studentTasks = studentIds.Select(id => FetchStudentAsync(id)).ToList();
-    var courseTasks = courseCodes.Select(code => FetchCourseAsync(code)).ToList();
+    var studentTasks = studentIds.Select(id => service.FetchStudentAsync(id)).ToList();
+    var courseTasks = courseCodes.Select(code => service.FetchCourseAsync(code)).ToList();
 
     // Both arrays load concurrently - total time is the slowest single task (~300ms)
     Student[] students = await Task.WhenAll(studentTasks);
@@ -358,5 +320,10 @@ async Task RunExercise6Step3()
     foreach (var s in students)
     {
         Console.WriteLine($"  {s.Name} GPA: {s.GPA}");
+    }
+
+    foreach (var c in courses)
+    {
+        Console.WriteLine($"  {c.Title} Capacity: {c.Capacity}");
     }
 }
