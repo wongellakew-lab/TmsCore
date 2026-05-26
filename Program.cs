@@ -22,7 +22,10 @@
 //await RunExercise6Step1();
 
 // Execute Session3 Exercise 6 Step 3
-await RunExercise6Step3();
+//await RunExercise6Step3();
+
+// Execute Session 3 Exercise 6 Part B
+await RunExercise6PartB();
 
 void RunExercise1()
 {
@@ -325,5 +328,49 @@ async Task RunExercise6Step3()
     foreach (var c in courses)
     {
         Console.WriteLine($"  {c.Title} Capacity: {c.Capacity}");
+    }
+}
+
+async Task RunExercise6PartB()
+{
+    Console.WriteLine("\n--- Exercise 6 Part B: TMS Enrollment Engine: Sequential Enrollment ---");
+    var service = new EnrollmentService();
+    var sw = Stopwatch.StartNew();
+
+    string[] studentIds = ["S1", "S2", "S3", "S4", "S5"];
+    string[] courseCodes = ["CRS-101", "CRS-201", "CRS-301"];
+
+    // Use LINQ to start all tasks without awaiting them yet
+    var studentTasks = studentIds.Select(id => service.FetchStudentAsync(id)).ToList();
+    var courseTasks = courseCodes.Select(code => service.FetchCourseAsync(code)).ToList();
+
+    // 1. Load data in parallel (As per Image 2)
+    var students = await Task.WhenAll(studentTasks);
+    Course[] courses = await Task.WhenAll(courseTasks);
+
+    Console.WriteLine($"Loaded in {sw.ElapsedMilliseconds}ms");
+
+    // 2. Process enrollments
+    var enrollments = new List<EnrollmentRecord>();
+    var failures = new List<string>();
+
+    foreach (var student in students)
+    {
+        try
+        {
+            // We await each enrollment one-by-one to maintain state (capacity) correctly
+            var record = await service.ProcessEnrollmentAsync(student, courses[0]);
+            
+            courses[0].EnrolledCount++; // Increment current state
+            enrollments.Add(record);
+            
+            Console.WriteLine($"  Enrolled: {student.Name} in {courses[0].Title}");
+            
+        }
+        catch (InvalidOperationException ex)
+        {
+            failures.Add($"{student.Name}: {ex.Message}");
+            Console.WriteLine($"  Rejected: {student.Name} for {ex.Message}");
+        }
     }
 }
