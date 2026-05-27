@@ -24,10 +24,13 @@
 //await RunExercise6Step3();
 
 // Execute Session 3 Exercise 6 Part B
-await RunExercise6PartB();
+//await RunExercise6PartB();
 
 // Execute Session 3 Exercise 7 Step 3
 //await RunExercise7();
+
+// Execute Appendix Activity 2
+RunActivity2();
 
 void RunExercise1()
 {
@@ -430,3 +433,43 @@ void PrintEnrollmentReport(Student[] students, List<EnrollmentRecord> successes,
     }
     Console.WriteLine("========================================");
 }
+
+void RunActivity2()
+{
+    Console.WriteLine("\n--- Activity 2: Currency Converter (ETB to USD/EUR) ---");
+
+    // 1. Read input from user
+    Console.Write("Enter amount in ETB: ");
+    string? input = Console.ReadLine();
+
+    // Use TryParse to safely handle invalid user input
+    if (!decimal.TryParse(input, out decimal amountEtb))
+    {
+        Console.WriteLine("Invalid input. Please enter a valid numeric amount.");
+        return;
+    }
+
+    // 2. Define exchange rates as decimals
+    decimal usdRate = 0.006279m;
+    decimal eurRate = 0.005392m;
+
+    // 3. Perform calculations using Decimal (Precise)
+    decimal usdDecimal = amountEtb * usdRate;
+    decimal eurDecimal = amountEtb * eurRate;
+
+    // 4. Perform calculations using Double (Approximate)
+    double usdDouble = (double)amountEtb * (double)usdRate;
+    double eurDouble = (double)amountEtb * (double)eurRate;
+
+    // 5. Output results
+    Console.WriteLine($"\n--- Results for {amountEtb:N2} ETB ---");
+    
+    Console.WriteLine($"(Decimal): {amountEtb}Birr = {usdDecimal:F20} USD");
+    Console.WriteLine($"(Double): {amountEtb} Birr = {usdDouble:F20} USD");
+    
+    Console.WriteLine($"\n(Decimal): {amountEtb} Birr = {eurDecimal:F20} EUR");
+    Console.WriteLine($"(Double): {amountEtb} Birr = {eurDouble:F20} EUR");
+   
+    Console.WriteLine("\nNote: The 'Difference' shows the hidden binary drift in the double type.");
+}
+    
