@@ -16,7 +16,7 @@ public class EnrollmentService
 
         // Check if course is full (Business Rule)
         if (course.EnrolledCount >= course.Capacity)
-            throw new InvalidOperationException("Course has reached maximum capacity.");
+            throw new CapacityReachedException(course.Code);
 
         // TODO 2: Use a switch expression on student.GPA to classify academic standing
         string standing = student.GPA switch
@@ -83,7 +83,7 @@ public class EnrollmentService
         // Business Rule: Check Capacity
         if (course.EnrolledCount >= course.Capacity)
         {
-            throw new InvalidOperationException($"Course {course.Code} has reached maximum capacity.");
+            throw new CapacityReachedException(course.Code);
         }
 
          var record = new EnrollmentRecord(student.Id, course.Code, DateTime.UtcNow);

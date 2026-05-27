@@ -25,7 +25,10 @@
 //await RunExercise6Step3();
 
 // Execute Session 3 Exercise 6 Part B
-await RunExercise6PartB();
+//await RunExercise6PartB();
+
+// Execute Session 3 Exercise 7 Step 3
+await RunExercise7();
 
 void RunExercise1()
 {
@@ -375,4 +378,28 @@ async Task RunExercise6PartB()
     }
 
      await Task.Delay(1000); 
+}
+
+async Task RunExercise7()
+{
+    Console.WriteLine("\n--- Exercise 7: Custom Exceptions ---");
+    var enrollService = new EnrollmentService();
+
+    try
+    {
+        // Create a course with 0 capacity to force an immediate error
+        var overflowCourse = new Course { Code = "CRS-999", Title = "Overflow Test", Capacity = 0 };
+        
+        await enrollService.ProcessEnrollmentAsync(
+            new Student { Id = "S99", Name = "Test", Age = 20, GPA = 3.0m },
+            overflowCourse
+        );
+    }
+    catch (CapacityReachedException ex)
+    {
+        // Because we caught the specific type, we can access the CourseCode property
+        Console.WriteLine("\nDomain exception caught:");
+        Console.WriteLine($"  Course: {ex.CourseCode}");
+        Console.WriteLine($"  Message: {ex.Message}");
+    }
 }
