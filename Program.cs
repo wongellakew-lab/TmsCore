@@ -25,10 +25,10 @@
 //await RunExercise6Step3();
 
 // Execute Session 3 Exercise 6 Part B
-//await RunExercise6PartB();
+await RunExercise6PartB();
 
 // Execute Session 3 Exercise 7 Step 3
-await RunExercise7();
+//await RunExercise7();
 
 void RunExercise1()
 {
@@ -377,7 +377,9 @@ async Task RunExercise6PartB()
         }
     }
 
-     await Task.Delay(1000); 
+     //await Task.Delay(1000); 
+
+     PrintEnrollmentReport(students, enrollments, failures, sw);
 }
 
 async Task RunExercise7()
@@ -402,4 +404,24 @@ async Task RunExercise7()
         Console.WriteLine($"  Course: {ex.CourseCode}");
         Console.WriteLine($"  Message: {ex.Message}");
     }
+}
+
+void PrintEnrollmentReport(Student[] students, List<EnrollmentRecord> successes, List<string> failures, Stopwatch sw)
+{
+    sw.Stop();
+    decimal classAverage = students.Length > 0 ? students.Average(s => s.GPA) : 0m;
+
+    Console.WriteLine("\n========== ENROLLMENT SUMMARY ==========");
+    Console.WriteLine($"Total students loaded:    {students.Length}");
+    Console.WriteLine($"Successful enrollments:  {successes.Count}");
+    Console.WriteLine($"Failed enrollments:      {failures.Count}");
+    Console.WriteLine($"Class average GPA:       {classAverage:F2}");
+    Console.WriteLine($"Total elapsed time:      {sw.ElapsedMilliseconds}ms");
+
+    if (failures.Count > 0)
+    {
+        Console.WriteLine("\n--- Failure Details ---");
+        foreach (var failure in failures) Console.WriteLine($"  {failure}");
+    }
+    Console.WriteLine("========================================");
 }

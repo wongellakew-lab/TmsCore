@@ -78,7 +78,7 @@ public class EnrollmentService
         if (course is null) throw new ArgumentNullException(nameof(course));
 
         // Simulate database processing time
-        await Task.Delay(100);
+        //await Task.Delay(100);
 
         // Business Rule: Check Capacity
         if (course.EnrolledCount >= course.Capacity)
