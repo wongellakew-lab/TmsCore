@@ -93,10 +93,12 @@ public class EnrollmentService
         // The service continues immediately to return the record.
         _ = SendConfirmationAsync(student);
 
+        FinalizeEnrollment(student!);
+
         return record;
     }
 
-private async Task SendConfirmationAsync(Student student)
+    private async Task SendConfirmationAsync(Student student)
     {
         try
         {
@@ -110,5 +112,16 @@ private async Task SendConfirmationAsync(Student student)
             // to crash the main enrollment process.
             Console.WriteLine($"   Email failed for {student.Name}: {ex.Message}");
         }
+    }
+
+    public Action<Student>? OnEnrollmentSuccess { get; set; }
+
+    public void FinalizeEnrollment(Student s)
+    {
+        Console.WriteLine("  Persisting to database...");
+
+        // TODO 3: Check if the delegate listener is 'not null' and invoke it
+        // The ?.Invoke syntax is the safest way to call a delegate
+        OnEnrollmentSuccess?.Invoke(s);
     }
 }
