@@ -30,7 +30,10 @@
 //await RunExercise7();
 
 // Execute Appendix Activity 2
-RunActivity2();
+//RunActivity2();
+
+// Execute Appendix Activity 3
+RunActivity3();
 
 void RunExercise1()
 {
@@ -472,4 +475,44 @@ void RunActivity2()
    
     Console.WriteLine("\nNote: The 'Difference' shows the hidden binary drift in the double type.");
 }
+
+void RunActivity3()
+{
+    Console.WriteLine("\n--- Activity 3: Null Safety Counter ---");
+
+    // 1. Take 5 variables from Session 1 and change to string?
+    string? studentName = null;
+    string? studentId = null;
+    string? campusRegion = null;
+    string? courseCode = null;
+    string? enrollmentStatus = null;
+
+    int preventedCrashes = 0;
+
+    // 2. Prevent crash on .Length or .Method using ?.
+    int nameLength = studentName?.Length ?? 0;
+    if (studentName == null) preventedCrashes++;
+
+    // 3. Prevent display issues using ??
+    string displayId = studentId ?? "ID-PENDING";
+    if (studentId == null) preventedCrashes++;
+
+    // 4. Handle logic flow safely
+    string upperRegion = campusRegion?.ToUpper() ?? "UNKNOWN REGION";
+    if (campusRegion == null) preventedCrashes++;
+
+    // 5. Use Null-coalescing assignment ??=
+    courseCode ??= "CRS-000";
+    if (courseCode == "CRS-000") preventedCrashes++;
+
+    // 6. Chain operations
+    bool isActive = enrollmentStatus?.Trim().ToLower() == "active";
+    if (enrollmentStatus == null) preventedCrashes++;
+
+    Console.WriteLine($"Student: {studentName ?? "Anonymous"} ({displayId})");
+    Console.WriteLine($"Region:  {upperRegion}");
+    Console.WriteLine($"Course:  {courseCode}");
+    Console.WriteLine($"Status:  {(isActive ? "Active" : "Inactive/Unknown")}");
     
+    Console.WriteLine($"\nTotal potential crashes prevented: {preventedCrashes}");
+}   
