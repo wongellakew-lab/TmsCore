@@ -18,6 +18,9 @@ public class Course
         : throw new ArgumentOutOfRangeException(nameof(value), "System constraint: Capacity must be greater than zero.");
     }
     public int EnrolledCount { get; set; }
+
+    public override string ToString() => 
+        $"Course: {Title} ({Code}), Capacity: {Capacity} (Enrolled: {EnrolledCount})";
 }
 
 public class Student
@@ -44,6 +47,10 @@ public class Student
         ? value
         : throw new ArgumentOutOfRangeException(nameof(value), "GPA must be between 0.0and 4.0.");
     }
+
+    public override string ToString() => 
+        $"Student: {Name} ({Id}), Age: {Age}, GPA: {GPA:F2}";
+
 }
 
 public interface IGradable
@@ -62,6 +69,9 @@ public class Quiz : IGradable
         if (TotalQuestions == 0) return 0m;
         return (decimal)CorrectAnswers / TotalQuestions * 100m;
     }
+
+     public override string ToString() => 
+        $"[Quiz] {Title} - Grade: {CalculateGrade():F2}%";
 }
 public class LabAssignment : IGradable
 {
@@ -73,4 +83,6 @@ public class LabAssignment : IGradable
         // 70% functionality, 30% code quality
         return (FunctionalityScore * 0.7m) + (CodeQualityScore * 0.3m);
     }
+    public override string ToString() => 
+        $"[Lab] {Title} - Grade: {CalculateGrade():F2}%";
 }

@@ -33,7 +33,10 @@
 //RunActivity2();
 
 // Execute Appendix Activity 3
-RunActivity3();
+//RunActivity3();
+
+// Execute Appendix Activity 4
+RunActivity4();
 
 void RunExercise1()
 {
@@ -516,3 +519,20 @@ void RunActivity3()
     
     Console.WriteLine($"\nTotal potential crashes prevented: {preventedCrashes}");
 }   
+
+void RunActivity4()
+{
+    Console.WriteLine("\n--- Activity 4: ToString Overrides ---");
+
+    // 1. Instantiate objects
+    var student = new Student { Id = "STU-001", Name = "Abeba", Age = 20, GPA = 3.8m };
+    var course = new Course { Code = "CS-101", Title = "C# Basics", Capacity = 30 };
+    var quiz = new Quiz { Title = "-1", CorrectAnswers = 9, TotalQuestions = 10 };
+    var lab = new LabAssignment { Title = "-1", FunctionalityScore = 80, CodeQualityScore = 70 };
+
+    // 2. Verify that Console.WriteLine now calls our custom ToString() automatically
+    Console.WriteLine(student); 
+    Console.WriteLine(course);
+    Console.WriteLine(quiz);
+    Console.WriteLine(lab);
+}
