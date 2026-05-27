@@ -373,4 +373,6 @@ async Task RunExercise6PartB()
             Console.WriteLine($"  Rejected: {student.Name} for {ex.Message}");
         }
     }
+
+     await Task.Delay(1000); 
 }

@@ -26,7 +26,7 @@ public class EnrollmentService
             _       => "Academic Warning" 
         };
 
-        Console.WriteLine($"{student.Name} is in {standing}.");
+        //Console.WriteLine($"{student.Name} is in {standing}.");
 
         // TODO 3: Return a new EnrollmentRecord with student.Id, course.Code, and DateTime.UtcNow
         return new EnrollmentRecord(student.Id, course.Code, DateTime.UtcNow);
@@ -86,6 +86,29 @@ public class EnrollmentService
             throw new InvalidOperationException($"Course {course.Code} has reached maximum capacity.");
         }
 
-        return new EnrollmentRecord(student.Id, course.Code, DateTime.UtcNow);
+         var record = new EnrollmentRecord(student.Id, course.Code, DateTime.UtcNow);
+
+        // --- EXERCISE 6B: SAFE FIRE-AND-FORGET ---
+        // We start the email process but don't 'await' it. 
+        // The service continues immediately to return the record.
+        _ = SendConfirmationAsync(student);
+
+        return record;
+    }
+
+private async Task SendConfirmationAsync(Student student)
+    {
+        try
+        {
+            await Task.Delay(100); // Simulate network latency for email server
+            Console.WriteLine($"   Email sent to {student.Name}");
+        }
+        catch (Exception ex)
+        {
+            // Log the failure but DO NOT re-throw. 
+            // This is intentional fire-and-forget: we don't want an email failure 
+            // to crash the main enrollment process.
+            Console.WriteLine($"   Email failed for {student.Name}: {ex.Message}");
+        }
     }
 }
