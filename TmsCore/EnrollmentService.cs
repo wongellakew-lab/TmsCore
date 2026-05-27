@@ -1,6 +1,6 @@
 public class EnrollmentService
 {
-    public EnrollmentRecord ProcessRegistration(Student? student, Course? course)
+    public async Task<EnrollmentRecord> ProcessRegistrationAsync(Student? student, Course? course)
     {
         // TODO 1: Add guard clauses - fail fast to avoid the "Pyramid of Doom"
         
@@ -17,6 +17,8 @@ public class EnrollmentService
         // Check if course is full (Business Rule)
         if (course.EnrolledCount >= course.Capacity)
             throw new CapacityReachedException(course.Code);
+        
+        await Task.Delay(100);
 
         // TODO 2: Use a switch expression on student.GPA to classify academic standing
         string standing = student.GPA switch
