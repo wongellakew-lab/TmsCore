@@ -36,7 +36,11 @@
 //RunActivity3();
 
 // Execute Appendix Activity 4
-RunActivity4();
+//RunActivity4();
+
+// Execute Appendix Activity 5
+RunActivity5();
+
 
 void RunExercise1()
 {
@@ -535,4 +539,44 @@ void RunActivity4()
     Console.WriteLine(course);
     Console.WriteLine(quiz);
     Console.WriteLine(lab);
+}
+
+void RunActivity5()
+{
+    Console.WriteLine("\n--- Activity 5: Advanced LINQ (Session 2 List) ---");
+
+    // Initialize list from Session 2 with added Activity 5 data
+    List<Student> students = [
+        new Student { Id = "S1", Name = "Abeba", GPA = 3.8m, EnrollmentYear = 2024, GrantAmount = 1500m },
+        new Student { Id = "S2", Name = "Kidane", GPA = 2.4m, EnrollmentYear = 2023, GrantAmount = 1000m },
+        new Student { Id = "S3", Name = "Dawit", GPA = 3.1m, EnrollmentYear = 2024, GrantAmount = 1200m },
+        new Student { Id = "S4", Name = "Sara", GPA = 3.9m, EnrollmentYear = 2023, GrantAmount = 2000m },
+        new Student { Id = "S5", Name = "Frehiwot", GPA = 2.0m, EnrollmentYear = 2024, GrantAmount = 800m },
+        new Student { Id = "S6", Name = "Abenezer", GPA = 3.5m, EnrollmentYear = 2025, GrantAmount = 1800m },
+        new Student { Id = "S7", Name = "Meron", GPA = 1.8m, EnrollmentYear = 2022, GrantAmount = 500m },
+        new Student { Id = "S8", Name = "Tesfaye", GPA = 2.9m, EnrollmentYear = 2023, GrantAmount = 1100m }
+    ];
+
+    // Query 1: Find all students whose name starts with "A"
+    var namesStartingWithA = students
+        .Where(s => s.Name.ToLower().StartsWith("a"))
+        .Select(s => s.Name);
+    
+    Console.WriteLine("1. Students starting with 'A' or 'a': " + string.Join(", ", namesStartingWithA));
+
+    // Query 2: Group students by their enrollment year
+    var studentsByYear = students.GroupBy(s => s.EnrollmentYear);
+    
+    Console.WriteLine("\n2. Students grouped by Enrollment Year:");
+    foreach (var yearGroup in studentsByYear.OrderBy(g => g.Key))
+    {
+        Console.WriteLine($"   Year {yearGroup.Key}: {string.Join(", ", yearGroup.Select(s => s.Name))}");
+    }
+
+    // Query 3: Calculate total grant allocation for honors students only (GPA >= 3.5)
+    decimal totalHonorsGrant = students
+        .Where(s => s.GPA >= 3.5m)
+        .Sum(s => s.GrantAmount);
+
+    Console.WriteLine($"\n3. Total Grant for Honors Students: {totalHonorsGrant} Birr");
 }
