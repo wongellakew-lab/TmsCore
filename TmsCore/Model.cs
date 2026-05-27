@@ -48,6 +48,21 @@ public class Student
         : throw new ArgumentOutOfRangeException(nameof(value), "GPA must be between 0.0and 4.0.");
     }
 
+    public decimal GrantAmount
+    {
+        get;
+        set => field = (value > 0)
+        ? value
+        : throw new ArgumentOutOfRangeException(nameof(value), "Grant amount cannot be negative.");
+    }
+
+    public int EnrollmentYear
+    {
+        get;
+        set => field = (value >= 2000 && value <= 2100)
+        ? value
+        : throw new ArgumentOutOfRangeException(nameof(value), "Enrollment year must be between 2000 and 2100");
+    }
     public override string ToString() => 
         $"Student: {Name} ({Id}), Age: {Age}, GPA: {GPA:F2}";
 
