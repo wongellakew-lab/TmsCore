@@ -12,7 +12,7 @@
 //RunExercise3B();
 
 // Execute Session 2 Exercise 4
-//RunExercise4();
+//await RunExercise4();
 
 // Execute Session 2 Exercise 5
 //RunExercise5();
@@ -39,35 +39,31 @@
 //RunActivity4();
 
 // Execute Appendix Activity 5
-RunActivity5();
+//RunActivity5();
+
+// Execute Appendix Activity 6
+await RunActivity6();
 
 
 void RunExercise1()
 {
     Console.WriteLine("--- Exercise 1: Null Safety ---");
-
-    // --- Step 1: Reproduce Legacy Bug ---
     
     string? region = null; 
 
-    // 2. Null-conditional operator '?.' — skip the call if null
     string? upperRegion = region?.ToUpper();
     Console.WriteLine($"Region (conditional): {upperRegion}");
 
-    // 3. Null-coalescing operator '??' — provide a fallback value
     string displayRegion = region ?? "Unassigned";
     Console.WriteLine($"Region (coalesced): {displayRegion}");
 
-    // 4. Null-coalescing assignment '??=' — assign only if currently null
     region ??= "Addis Ababa";
     Console.WriteLine($"Region (assigned): {region}");
 
-
-    // Step 3: Core TMS Domain Variables
     string studentName = "Abeba";
     string studentId = "STU-001";
     int enrollmentCount = 3;
-    decimal grantAmount = 1999.99m; // 'm' suffix marks a decimal literal
+    decimal grantAmount = 1999.99m; 
     DateTime enrolledAt = DateTime.UtcNow;
     string? campusRegion = null;
 
@@ -83,11 +79,9 @@ void RunExercise2()
 {
     Console.WriteLine("\n--- Exercise 2: Floating Point Bug ---");
 
-    // Step 1: Legacy implementation — using double for money causes precision drift
     double grantPerStudent = 1999.99;
     double totalAllocation = grantPerStudent * 100_000;
 
-    // The output will show a tiny drift (e.g., .0000000003)
     Console.WriteLine($"Total allocated (double): {totalAllocation}");
 
     decimal grantPerStudentFixed = 1999.99m; 
@@ -102,16 +96,14 @@ void RunExercise3Part1()
 {
     Console.WriteLine("\n--- Exercise 3 Part 1: Immutability with Records ---");
 
-    // Testing the record
     var enrollment = new EnrollmentRecord("STU-001", "CS-401", DateTime.UtcNow);
     Console.WriteLine($"Original: {enrollment}");
 
     var corrected = enrollment with { CourseCode = "CS-402" };
     Console.WriteLine($"Corrected: {corrected}");
 
-    // Value equality check
     var duplicate = new EnrollmentRecord("STU-001", "CS-401", enrollment.EnrolledAt);
-    Console.WriteLine($"Same data? {enrollment == duplicate}"); // True
+    Console.WriteLine($"Same data? {enrollment == duplicate}"); 
 
 }
 
@@ -123,7 +115,6 @@ void RunExercise3Part2()
     var course = new Course { Code = "CS-401", Title = "Advanced C#", Capacity = 30 };
     Console.WriteLine($"Course: {course.Title} (Capacity: {course.Capacity})");
     
-    // Invalid capacity — should throw
     try
     {
         course.Capacity = -5;
@@ -133,7 +124,6 @@ void RunExercise3Part2()
         Console.WriteLine($"Caught: {ex.Message}");
     }
 
-    // Invalid title — should throw
     try
     {
         course.Title = "";
@@ -151,15 +141,12 @@ void RunExercise3Part3()
     var s = new Student { Id = "S1", Name = "Abeba", Age = 20, GPA = 3.8m };
     Console.WriteLine($"Student: {s.Name}, GPA: {s.GPA}");
     
-    // Test Invalid Age
     try { s.Age = 12; }
     catch (Exception ex) { Console.WriteLine($"Age Error: {ex.Message}"); }
 
-    // Test Invalid GPA
     try { s.GPA = 5.0m; }
     catch (Exception ex) { Console.WriteLine($"GPA Error: {ex.Message}"); }
 
-     // Test Invalid Name
     try { s.Name = ""; }
     catch (Exception ex) { Console.WriteLine($"Name Error: {ex.Message}"); }
 
@@ -177,7 +164,7 @@ void RunExercise3B()
                 Console.WriteLine($"{item.Title}: {item.CalculateGrade():F2}%");
             }
         }
-    // Test it — one array holds two completely different types
+   
     IGradable[] cohortAssessments = 
     [
         new Quiz { Title = "C# Basics", CorrectAnswers = 18, TotalQuestions = 20 }, 
@@ -187,34 +174,31 @@ void RunExercise3B()
     PrintGradeReport(cohortAssessments);
 }
 
-void RunExercise4()
+async Task RunExercise4()
 {
     Console.WriteLine("\n--- Exercise 4: Guards and Pattern Matching ---");
     var service = new EnrollmentService();
 
-    // Test 1: Valid registration
     var validStudent = new Student { Id = "S1", Name = "Abeba", Age = 20, GPA = 3.8m };
     var validCourse = new Course { Code = "CS-401", Title = "Advanced C#", Capacity = 30 };
     
-    var result = service.ProcessRegistration(validStudent, validCourse);
+    var result = await service.ProcessRegistrationAsync(validStudent, validCourse);
     Console.WriteLine($"Enrolled: {result.StudentId} in {result.CourseCode}");
 
-    // Test 2: Null student should throw ArgumentNullException
     try
     {
-        service.ProcessRegistration(null, validCourse);
+        await service.ProcessRegistrationAsync(null, validCourse);
     }
     catch (ArgumentNullException ex)
     {
         Console.WriteLine($"Guard caught: {ex.ParamName}");
     }
 
-    // Test 3: Full course should throw InvalidOperationException
     var fullCourse = new Course { Code = "CS-402", Title = "Full Course", Capacity = 1 };
     fullCourse.EnrolledCount = 1;
     try
     {
-        service.ProcessRegistration(validStudent, fullCourse);
+        await service.ProcessRegistrationAsync(validStudent, fullCourse);
     }
     catch (InvalidOperationException ex)
     {
@@ -226,7 +210,6 @@ void RunExercise5()
 {
     Console.WriteLine("\n--- Exercise 5: Analytics Dashboard (LINQ) ---");
 
-    // Step 1: Create the Student Data using C# 12+ Collection Expressions
     List<Student> students = [
         new Student { Id = "S1", Name = "Abeba", Age = 22, GPA = 3.8m },
         new Student { Id = "S2", Name = "Kidane", Age = 21, GPA = 2.4m },
@@ -239,10 +222,10 @@ void RunExercise5()
     ];
 
     var leaderboard = students
-        .Where(s => s.GPA >= 3.5m)            // TODO 1: Extract students where GPA is >= 3.5m
-        .OrderByDescending(s => s.GPA)        // TODO 2: Sort by GPA descending
-        .Select(s => s.Name)                  // TODO 3: Project to keep only the 'Name' string
-        .ToList();                            // TODO 4: Materialize into a concrete List
+        .Where(s => s.GPA >= 3.5m)            
+        .OrderByDescending(s => s.GPA)        
+        .Select(s => s.Name)                  
+        .ToList();                            
 
     Console.WriteLine($"Found {leaderboard.Count} Honors Students:");
     foreach (var name in leaderboard)
@@ -250,13 +233,9 @@ void RunExercise5()
         Console.WriteLine($"- {name}");
     }
 
-    // Step 3: Class Average
-    // TODO 5: Calculate average GPA across all students
     decimal averageGpa = students.Average(s => s.GPA);
     Console.WriteLine($"\nClass Average GPA: {averageGpa:F2}");
 
-    // Step 4: Group by Academic Standing
-    // TODO 6: Use .GroupBy with a switch expression to classify students
     var standingGroups = students.GroupBy(s => s.GPA switch
     {
         >= 3.5m => "Honors",
@@ -278,7 +257,6 @@ void RunExercise5()
      string[] backendCourses = ["C#", "ASP.NET Core"];
     string[] frontendCourses = ["TypeScript", "Angular"];
     
-    // TODO 7: Use the spread operator (..) to merge arrays and append a value
     string[] allCourses = [.. backendCourses, .. frontendCourses, "Capstone"];
     
     Console.WriteLine($"\nFull curriculum: {string.Join(", ", allCourses)}");
@@ -292,21 +270,17 @@ async Task RunExercise6Step1()
     var sw = Stopwatch.StartNew();
     for (int i = 0; i < 5; i++)
     {
-        Thread.Sleep(300); // Thread is HELD for 300ms - cannot serve anyone else
+        Thread.Sleep(300); 
     }
     Console.WriteLine($"Blocking sequential: {sw.ElapsedMilliseconds}ms");
-
-    // 2. ASYNC BUT STILL SEQUENTIAL: Thread released, but calls are one-at-a-time
     
     sw.Restart();
     for (int i = 0; i < 5; i++)
     {
-        await Task.Delay(300); // Thread released while waiting, but still sequential
+        await Task.Delay(300); 
     }
     Console.WriteLine($"Async sequential:    {sw.ElapsedMilliseconds}ms");
 
-    // 3. THE RIGHT WAY: Async parallel - all 5 start simultaneously
-    // Maximum performance - total time equals the slowest single call
     sw.Restart();
     var tasks = Enumerable.Range(0, 5).Select(_ => Task.Delay(300));
     await Task.WhenAll(tasks);
@@ -320,15 +294,12 @@ async Task RunExercise6Step3()
     var sw = Stopwatch.StartNew();
     var service = new EnrollmentService();
 
-    // Start all fetches simultaneously students AND courses
     string[] studentIds = ["S1", "S2", "S3", "S4", "S5"];
     string[] courseCodes = ["CRS-101", "CRS-201", "CRS-301"];
 
-    // Use LINQ to start all tasks without awaiting them yet
     var studentTasks = studentIds.Select(id => service.FetchStudentAsync(id)).ToList();
     var courseTasks = courseCodes.Select(code => service.FetchCourseAsync(code)).ToList();
 
-    // Both arrays load concurrently - total time is the slowest single task (~300ms)
     Student[] students = await Task.WhenAll(studentTasks);
     Course[] courses = await Task.WhenAll(courseTasks);
 
@@ -361,17 +332,16 @@ async Task RunExercise6PartB()
     string[] studentIds = ["S1", "S2", "S3", "S4", "S5"];
     string[] courseCodes = ["CRS-101", "CRS-201", "CRS-301"];
 
-    // Use LINQ to start all tasks without awaiting them yet
     var studentTasks = studentIds.Select(id => service.FetchStudentAsync(id)).ToList();
     var courseTasks = courseCodes.Select(code => service.FetchCourseAsync(code)).ToList();
 
-    // 1. Load data in parallel (As per Image 2)
+   
     var students = await Task.WhenAll(studentTasks);
     Course[] courses = await Task.WhenAll(courseTasks);
 
     Console.WriteLine($"Loaded in {sw.ElapsedMilliseconds}ms");
 
-    // 2. Process enrollments
+    
     var enrollments = new List<EnrollmentRecord>();
     var failures = new List<string>();
 
@@ -379,10 +349,9 @@ async Task RunExercise6PartB()
     {
         try
         {
-            // We await each enrollment one-by-one to maintain state (capacity) correctly
             var record = await service.ProcessEnrollmentAsync(student, courses[0]);
             
-            courses[0].EnrolledCount++; // Increment current state
+            courses[0].EnrolledCount++; 
             enrollments.Add(record);
             
             Console.WriteLine($"  Enrolled: {student.Name} in {courses[0].Title}");
@@ -407,7 +376,6 @@ async Task RunExercise7()
 
     try
     {
-        // Create a course with 0 capacity to force an immediate error
         var overflowCourse = new Course { Code = "CRS-999", Title = "Overflow Test", Capacity = 0 };
         
         await enrollService.ProcessEnrollmentAsync(
@@ -417,7 +385,6 @@ async Task RunExercise7()
     }
     catch (CapacityReachedException ex)
     {
-        // Because we caught the specific type, we can access the CourseCode property
         Console.WriteLine("\nDomain exception caught:");
         Console.WriteLine($"  Course: {ex.CourseCode}");
         Console.WriteLine($"  Message: {ex.Message}");
@@ -448,30 +415,29 @@ void RunActivity2()
 {
     Console.WriteLine("\n--- Activity 2: Currency Converter (ETB to USD/EUR) ---");
 
-    // 1. Read input from user
+   
     Console.Write("Enter amount in ETB: ");
     string? input = Console.ReadLine();
 
-    // Use TryParse to safely handle invalid user input
+    
     if (!decimal.TryParse(input, out decimal amountEtb))
     {
         Console.WriteLine("Invalid input. Please enter a valid numeric amount.");
         return;
     }
 
-    // 2. Define exchange rates as decimals
     decimal usdRate = 0.006279m;
     decimal eurRate = 0.005392m;
 
-    // 3. Perform calculations using Decimal (Precise)
+    
     decimal usdDecimal = amountEtb * usdRate;
     decimal eurDecimal = amountEtb * eurRate;
 
-    // 4. Perform calculations using Double (Approximate)
+    
     double usdDouble = (double)amountEtb * (double)usdRate;
     double eurDouble = (double)amountEtb * (double)eurRate;
 
-    // 5. Output results
+   
     Console.WriteLine($"\n--- Results for {amountEtb:N2} ETB ---");
     
     Console.WriteLine($"(Decimal): {amountEtb}Birr = {usdDecimal:F20} USD");
@@ -487,7 +453,7 @@ void RunActivity3()
 {
     Console.WriteLine("\n--- Activity 3: Null Safety Counter ---");
 
-    // 1. Take 5 variables from Session 1 and change to string?
+    
     string? studentName = null;
     string? studentId = null;
     string? campusRegion = null;
@@ -496,23 +462,23 @@ void RunActivity3()
 
     int preventedCrashes = 0;
 
-    // 2. Prevent crash on .Length or .Method using ?.
+    
     int nameLength = studentName?.Length ?? 0;
     if (studentName == null) preventedCrashes++;
 
-    // 3. Prevent display issues using ??
+    
     string displayId = studentId ?? "ID-PENDING";
     if (studentId == null) preventedCrashes++;
 
-    // 4. Handle logic flow safely
+    
     string upperRegion = campusRegion?.ToUpper() ?? "UNKNOWN REGION";
     if (campusRegion == null) preventedCrashes++;
 
-    // 5. Use Null-coalescing assignment ??=
+    
     courseCode ??= "CRS-000";
     if (courseCode == "CRS-000") preventedCrashes++;
 
-    // 6. Chain operations
+    
     bool isActive = enrollmentStatus?.Trim().ToLower() == "active";
     if (enrollmentStatus == null) preventedCrashes++;
 
@@ -528,13 +494,13 @@ void RunActivity4()
 {
     Console.WriteLine("\n--- Activity 4: ToString Overrides ---");
 
-    // 1. Instantiate objects
+    
     var student = new Student { Id = "STU-001", Name = "Abeba", Age = 20, GPA = 3.8m };
     var course = new Course { Code = "CS-101", Title = "C# Basics", Capacity = 30 };
     var quiz = new Quiz { Title = "-1", CorrectAnswers = 9, TotalQuestions = 10 };
     var lab = new LabAssignment { Title = "-1", FunctionalityScore = 80, CodeQualityScore = 70 };
 
-    // 2. Verify that Console.WriteLine now calls our custom ToString() automatically
+    
     Console.WriteLine(student); 
     Console.WriteLine(course);
     Console.WriteLine(quiz);
@@ -545,7 +511,7 @@ void RunActivity5()
 {
     Console.WriteLine("\n--- Activity 5: Advanced LINQ (Session 2 List) ---");
 
-    // Initialize list from Session 2 with added Activity 5 data
+    
     List<Student> students = [
         new Student { Id = "S1", Name = "Abeba", GPA = 3.8m, EnrollmentYear = 2024, GrantAmount = 1500m },
         new Student { Id = "S2", Name = "Kidane", GPA = 2.4m, EnrollmentYear = 2023, GrantAmount = 1000m },
@@ -557,14 +523,14 @@ void RunActivity5()
         new Student { Id = "S8", Name = "Tesfaye", GPA = 2.9m, EnrollmentYear = 2023, GrantAmount = 1100m }
     ];
 
-    // Query 1: Find all students whose name starts with "A"
+    
     var namesStartingWithA = students
         .Where(s => s.Name.ToLower().StartsWith("a"))
         .Select(s => s.Name);
     
     Console.WriteLine("1. Students starting with 'A' or 'a': " + string.Join(", ", namesStartingWithA));
 
-    // Query 2: Group students by their enrollment year
+    
     var studentsByYear = students.GroupBy(s => s.EnrollmentYear);
     
     Console.WriteLine("\n2. Students grouped by Enrollment Year:");
@@ -573,10 +539,30 @@ void RunActivity5()
         Console.WriteLine($"   Year {yearGroup.Key}: {string.Join(", ", yearGroup.Select(s => s.Name))}");
     }
 
-    // Query 3: Calculate total grant allocation for honors students only (GPA >= 3.5)
+    
     decimal totalHonorsGrant = students
         .Where(s => s.GPA >= 3.5m)
         .Sum(s => s.GrantAmount);
 
     Console.WriteLine($"\n3. Total Grant for Honors Students: {totalHonorsGrant} Birr");
+}
+
+async Task RunActivity6()
+{
+    Console.WriteLine("\n--- Activity 6: Async Enrollment Conversion ---");
+    
+    var service = new EnrollmentService();
+    var student = new Student { Id = "S-99", Name = "Student", GPA = 3.9m };
+    var course = new Course { Code = "CS-101", Title = "Async C#", Capacity = 10 };
+
+    var sw = Stopwatch.StartNew();
+
+    Console.WriteLine("Initiating async registration...");
+    
+    var record = await service.ProcessRegistrationAsync(student, course);
+    sw.Stop();
+
+    Console.WriteLine($"Registration successful at: {record.EnrolledAt:HH:mm:ss}");
+    Console.WriteLine($"Total Elapsed Time: {sw.ElapsedMilliseconds}ms");
+    Console.WriteLine($"(Expected: >100ms due to Task.Delay)");
 }
