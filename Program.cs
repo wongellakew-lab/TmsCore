@@ -338,6 +338,12 @@ async Task RunExercise6PartB()
 {
     Console.WriteLine("\n--- Exercise 6 Part B: TMS Enrollment Engine: Sequential Enrollment ---");
     var service = new EnrollmentService();
+
+    service.OnEnrollmentSuccess = s => 
+    {
+        Console.WriteLine($"   [SMS SENT] Welcome to the TMS, {s.Name}!");
+    };
+
     var sw = Stopwatch.StartNew();
 
     string[] studentIds = ["S1", "S2", "S3", "S4", "S5"];
